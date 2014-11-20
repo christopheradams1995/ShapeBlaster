@@ -4,30 +4,27 @@ package shapeblaster;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
 import java.util.Random;
 
-public class Square extends Shape implements Runnable
+public class Circle extends Shape implements Runnable
 {
 
     private int x = 0 , y = 0 , w = 25 , h = 25;
     private int ax = 2, ay = 0;
-    
-    private int speed;
     private int maxX = 800 , maxY = 600;
     private Thread t;
+    private int speed;
     public static Random ran = new Random();
     private String dir;
-    private Color color = Color.red;
     
-    Square()
+    Circle()
     {
         int ranx = ran.nextInt(maxX);
         int rany = ran.nextInt(maxY);
         speed = ran.nextInt(3)+2;
         x = ranx;
         y = rany;
-        rec = new Rectangle(x,y,w,h);
+        
         dir = returnDirection();
         updateDirection();
         
@@ -144,14 +141,8 @@ public class Square extends Shape implements Runnable
     
     public void draw(Graphics g)
     {
-        g.setColor(Color.red);
-        g.fillRect(x, y, w, h);
+        g.setColor(Color.blue);
+        g.fillOval(x, y, w, h);
     }
-    
-    public void mouseClicked(MouseEvent e) 
-    {
-        color = Color.GREEN;
-    }
-
     
 }
