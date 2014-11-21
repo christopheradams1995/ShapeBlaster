@@ -3,6 +3,7 @@ package shapeblaster;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.Random;
@@ -142,7 +143,7 @@ public class Square extends Shape implements Runnable
         }
     }
     
-    public void draw(Graphics g)
+    public void draw(Graphics2D g)
     {
         g.setColor(Color.red);
         g.fillRect(x, y, w, h);

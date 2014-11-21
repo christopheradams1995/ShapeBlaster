@@ -3,6 +3,7 @@ package shapeblaster;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Random;
 
@@ -139,7 +140,7 @@ public class Circle extends Shape implements Runnable
         }
     }
     
-    public void draw(Graphics g)
+    public void draw(Graphics2D g)
     {
         g.setColor(Color.blue);
         g.fillOval(x, y, w, h);

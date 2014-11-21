@@ -5,8 +5,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -19,10 +21,12 @@ import javax.swing.JPanel;
 public class ShapeBlaster extends JComponent implements Runnable, MouseListener
 {
     public static JFrame frame = new JFrame("Shape Blaster!");
-    public static JPanel panel = new JPanel(new FlowLayout());
     private Thread t;
+
     private static List shapes = new ArrayList();
     public static Point point = new Point(0,0);
+    private static MainMenu mm = new MainMenu();
+    private static ShapeBlaster sb = new ShapeBlaster();
     
     ShapeBlaster()
     {
@@ -43,16 +47,14 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
     
     public static void main(String[] args) 
     { 
-       panel.setBackground(Color.white);
-       
        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        frame.setSize(800,600);
        frame.setLocationRelativeTo(null);
-       
        frame.setVisible(true);
        
-       ShapeBlaster sb = new ShapeBlaster();
-       frame.setContentPane(sb);
+       
+       
+       frame.setContentPane(mm);
        frame.setBackground(Color.white);
     }
     
@@ -76,11 +78,15 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
     public void paintComponent(Graphics g) 
     {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, // Anti-alias!
+        RenderingHints.VALUE_ANTIALIAS_ON);
+        
         Object delShape = null;
         for(Object shape : shapes) 
         {
             Shape cshape = (Shape) shape;
-            cshape.draw(g);
+            cshape.draw(g2d);
             if(cshape.rec.contains(point))
             {
                 delShape = shape;
