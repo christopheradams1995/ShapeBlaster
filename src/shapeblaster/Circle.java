@@ -1,4 +1,12 @@
-
+/**
+* This is a reaction based game. When you click a shape the shape reactions which
+* affect shapes around it. The point of the game is to react every shape and you
+* gain points the better you do.
+*
+* @author  Christopher Adams
+* @version 1.0
+* @since   2014-11-23
+*/
 package shapeblaster;
 
 import java.awt.Color;
@@ -11,10 +19,11 @@ public class Circle extends Shape implements Runnable
 {
 
     private int x = 0 , y = 0 , w = 25 , h = 25;
+
     private int ax = 2, ay = 0;
     private int maxX = 800 , maxY = 600;
     private Thread t;
-    private int speed;
+    private int xspeed, yspeed;
     public static Random ran = new Random();
     private String dir;
     
@@ -22,10 +31,11 @@ public class Circle extends Shape implements Runnable
     {
         int ranx = ran.nextInt(maxX);
         int rany = ran.nextInt(maxY);
-        speed = ran.nextInt(3)+2;
+        xspeed = ran.nextInt(3)+2;
+        yspeed = ran.nextInt(3)+2;
         x = ranx;
         y = rany;
-        
+        rec = new Rectangle(x,y,w,h);
         dir = returnDirection();
         updateDirection();
         
@@ -61,27 +71,24 @@ public class Circle extends Shape implements Runnable
         return dir;
     }
 
+    //This method 
     public void updateDirection() 
     {
         if(dir.equals("up"))
         {
-            ay = -speed;
-            ax = 0;
+            ay = -yspeed;
         }
         else if(dir.equals("down"))
         {
-            ay = speed;
-            ax = 0;
+            ay = yspeed;
         }
         else if(dir.equals("right"))
         {
-            ax = speed;
-            ay = 0;
+            ax = xspeed;
         }
         else if(dir.equals("left"))
         {
-            ax = -speed;
-            ay = 0;
+            ax = -xspeed;
         }
     }
     
@@ -97,37 +104,76 @@ public class Circle extends Shape implements Runnable
     
     public void run()
     {
-        while(true)
+        int i = 0;
+        while(!delete)
         {
             try
             {
-                x += ax;
-                y += ay;
-                if(x >= maxX-w)
+                if(!explode)
                 {
-                    setDirection("left");
-                    updateDirection();
+                    x += ax;
+                    y += ay;
+                    rec.setBounds(x, y, w, h);
+                
+                    if(x >= maxX-w)
+                    {
+                        setDirection("left");
+                        updateDirection();
+                    }
+                
+                    if(x <= 0)
+                    {
+                        setDirection("right");
+                        updateDirection();
+                    }
+                
+                    if(y <= 0)
+                    {
+                        setDirection("down");
+                        updateDirection();
+                    }
+                
+                    if(y >= maxY-50)
+                    {
+                        setDirection("up");
+                        updateDirection();
+                    }
+                }
+                else
+                {
+                    i++;
+                    System.out.println(i);
+                    if(i == 50)
+                    {
+                        w = +90;
+                        h = +90;
+                        x -= 30;
+                        y -= 30;
+                        rec.setBounds(x, y, w, h);
+                        ShapeBlaster.checkReact(rec, -1);
+                        
+                    }
+                    if(i > 50)
+                    {
+                        w -=2;
+                        h -=2;
+                        rec.setBounds(x, y, w, h);
+                        ShapeBlaster.checkReact(rec, -1);
+
+                    }
+                    if((i % 3) == 0 && i > 50)
+                    {
+                        x += 3;
+                        y += 3;
+                    }
+                    if(i == 80)
+                    {
+                        delete = true;
+                        
+                    }
                 }
                 
-                if(x <= 0)
-                {
-                    setDirection("right");
-                    updateDirection();
-                }
-                
-                if(y <= 0)
-                {
-                    setDirection("down");
-                    updateDirection();
-                }
-                
-                if(y >= maxY-50)
-                {
-                    setDirection("up");
-                    updateDirection();
-                }
-                rec = new Rectangle(x,y,w,h);
-                Thread.sleep(14);
+                Thread.sleep(20);
             }
             catch(InterruptedException e)
             {
@@ -142,8 +188,20 @@ public class Circle extends Shape implements Runnable
     
     public void draw(Graphics2D g)
     {
-        g.setColor(Color.blue);
-        g.fillOval(x, y, w, h);
+        if(!explode)
+        {
+            g.setColor(Color.blue);
+            g.fillOval(x, y, w, h);
+        }
+        
+        //Set the glow outline
+        g.setColor(Color.white);
+        g.drawOval(x, y, w+2, h+2);
+    }
+    
+    public void react()
+    {
+        this.explode = true;
     }
     
 }

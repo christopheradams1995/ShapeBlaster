@@ -1,4 +1,12 @@
-
+/**
+* This is a reaction based game. When you click a shape the shape reactions which
+* affect shapes around it. The point of the game is to react every shape and you
+* gain points the better you do.
+*
+* @author  Christopher Adams
+* @version 1.0
+* @since   2014-11-23
+*/
 package shapeblaster;
 
 import java.awt.Color;
@@ -7,6 +15,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.Random;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.Glow;
 
 public class Square extends Shape implements Runnable
 {
@@ -100,36 +110,106 @@ public class Square extends Shape implements Runnable
     
     public void run()
     {
-        while(true)
+        int i = 0;
+        
+        while(!delete)
         {
             try
             {
-                x += ax;
-                y += ay;
-                if(x >= maxX-w)
+                if(!explode)
                 {
-                    setDirection("left");
-                    updateDirection();
+                    x += ax;
+                    y += ay;
+                    rec.setBounds(x, y, w, h);
+                
+                    if(x >= maxX-w)
+                    {
+                        setDirection("left");
+                        updateDirection();
+                    }
+                
+                    if(x <= 0)
+                    {
+                        setDirection("right");
+                        updateDirection();
+                    }
+                
+                    if(y <= 0)
+                    {
+                        setDirection("down");
+                        updateDirection();
+                    }
+                
+                    if(y >= maxY-50)
+                    {
+                        setDirection("up");
+                        updateDirection();
+                    }
+                //rec = new Rectangle(x,y,w,h);
+                }
+                else
+                {
+                    i++;
+
+                    if(i == 80)
+                    {
+                        int ir = ran.nextInt(4);
+                        speed = 5;
+                        switch(ir)
+                        {
+                            case 0:
+                                setDirection("down");
+                                updateDirection();
+                                break;
+                            case 1:
+                                setDirection("left");
+                                updateDirection();
+                                break;
+                            case 2:
+                                setDirection("up");
+                                updateDirection();
+                                break;
+                            case 3:
+                                setDirection("right");
+                                updateDirection();
+                                break;
+                        }
+                        //delete = true;
+                        
+                    }
+                    if(i > 80)
+                    {
+                        x += ax;
+                        y += ay;
+                        Boolean hit = ShapeBlaster.checkReact(rec, 1);
+                        if(hit)
+                            delete = true;
+                        
+                        rec.setBounds(x, y, w, h);
+                        
+                        if(x >= maxX-w)
+                        {
+                            this.delete = true;
+                        }
+                
+                        if(x <= 0)
+                        {
+                            this.delete = true;
+                        }
+                
+                        if(y <= 0)
+                        {
+                            this.delete = true;
+                        }
+                
+                        if(y >= maxY-50)
+                        {
+                            this.delete = true;
+                        }
+                    
+                    }
                 }
                 
-                if(x <= 0)
-                {
-                    setDirection("right");
-                    updateDirection();
-                }
-                
-                if(y <= 0)
-                {
-                    setDirection("down");
-                    updateDirection();
-                }
-                
-                if(y >= maxY-50)
-                {
-                    setDirection("up");
-                    updateDirection();
-                }
-                rec = new Rectangle(x,y,w,h);
                 Thread.sleep(14);
             }
             catch(InterruptedException e)
@@ -145,14 +225,26 @@ public class Square extends Shape implements Runnable
     
     public void draw(Graphics2D g)
     {
-        g.setColor(Color.red);
-        g.fillRect(x, y, w, h);
-    }
-    
-    public void mouseClicked(MouseEvent e) 
-    {
-        color = Color.GREEN;
+        if(!explode)
+        {
+            g.setColor(Color.red);
+            g.fillRect(x, y, w, h);
+        }
+        else
+        {
+            g.setColor(Color.white);
+            g.fillRect(x, y, w, h);
+        }
+        
+        //Set the glow outline
+        g.setColor(Color.white);
+        g.drawRect(x-1, y-1, w+2, h+2);
     }
 
+
+    public void react()
+    {
+        this.explode = true;
+    }
     
 }
