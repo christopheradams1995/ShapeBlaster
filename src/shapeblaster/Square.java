@@ -9,6 +9,8 @@
 */
 package shapeblaster;
 
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,11 +23,11 @@ import javafx.scene.effect.Glow;
 public class Square extends Shape implements Runnable
 {
 
-    private int x = 0 , y = 0 , w = 25 , h = 25;
+    private int x = 0 , y = 0 , w = 20 , h = 20;
     private int ax = 2, ay = 0;
     
     private int speed;
-    private int maxX = 800 , maxY = 600;
+    private int maxX = 800 , maxY = 550;
     private Thread t;
     public static Random ran = new Random();
     private String dir;
@@ -111,7 +113,7 @@ public class Square extends Shape implements Runnable
     public void run()
     {
         int i = 0;
-        
+        int j = 0;// used for hitcount
         while(!delete)
         {
             try
@@ -181,9 +183,13 @@ public class Square extends Shape implements Runnable
                     {
                         x += ax;
                         y += ay;
-                        Boolean hit = ShapeBlaster.checkReact(rec, 1);
+                        Boolean hit = ShapeBlaster.checkReact(rec);
                         if(hit)
+                            j++;
+                        if(j >= 2)
+                        {
                             delete = true;
+                        }
                         
                         rec.setBounds(x, y, w, h);
                         
@@ -227,17 +233,22 @@ public class Square extends Shape implements Runnable
     {
         if(!explode)
         {
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f));
             g.setColor(Color.red);
             g.fillRect(x, y, w, h);
         }
         else
         {
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
             g.setColor(Color.white);
             g.fillRect(x, y, w, h);
         }
         
         //Set the glow outline
         g.setColor(Color.white);
+        g.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_ROUND));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
         g.drawRect(x-1, y-1, w+2, h+2);
     }
 

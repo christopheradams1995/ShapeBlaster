@@ -32,29 +32,35 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import static shapeblaster.ShapeBlaster.point;
 
-public class MainMenu extends JComponent implements MouseListener, MouseMotionListener
+public class LevelSelection extends JComponent implements MouseListener, MouseMotionListener
 {
     // used for the button events including the movement of the arrow
-    private static Rectangle recNew= new Rectangle(230,160,316,95)
-            ,recLoad = new Rectangle(230,280,316,95),
-            recOption = new Rectangle(230,400,316,95);
+    private static Rectangle recMenu= new Rectangle(17,528,187,54)
+            ,recShop = new Rectangle(588,531,188,54),
+            recL1 = new Rectangle(41,81,143,119),
+            recL2 = new Rectangle(238,81,143,119),
+            recL3 = new Rectangle(429,80,143,119),
+            recL4 = new Rectangle(615,80,143,119),
+            recL5 = new Rectangle(39,235,143,119),
+            recL6 = new Rectangle(239,235,143,119),
+            recL7 = new Rectangle(430,235,143,119),
+            recL8 = new Rectangle(615,235,143,119),
+            recL9 = new Rectangle(40,383,143,119),
+            recL10 = new Rectangle(239,383,143,119),
+            recL11 = new Rectangle(430,384,143,119),
+            recL12 = new Rectangle(616,383,143,119);
+    
     private Point p;
     
     BufferedImage back;
-    BufferedImage button;
-    BufferedImage title;
-    BufferedImage arrow;        
     
-    MainMenu()
+    LevelSelection()
     {
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         
         //Load Images
-        back = getImage("images/space1_0.png");
-        button = getImage("images/MainmenuButton.png");
-        title = getImage("images/MainmenuTitle.png");
-        arrow = getImage("images/arrow.png");
+        back = getImage("images/levelSelection.png");
     }
     
     public void paintComponent(Graphics g) 
@@ -66,28 +72,7 @@ public class MainMenu extends JComponent implements MouseListener, MouseMotionLi
             
             //Draw Images
             g2d.drawImage(back, 0, 0, null);
-            g2d.drawImage(button, 230, 160, null);
-            g2d.drawImage(button, 230, 280, null);
-            g2d.drawImage(button, 230, 400, null);
-            g2d.drawImage(title, 170, 60, null);
-            if(p != null)
-            {
-                g2d.drawImage(arrow, p.x, p.y, null);
-            }
-            
-            //Add Text for buttons
-            Font font = new Font("Serif", Font.PLAIN, 55);
-            g2d.setFont(font);
-            g2d.setColor(Color.white);
-            
-            //anti alias
-            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                          RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            
-            g2d.drawString("New Game", 250, 220);
-            g2d.drawString("Load Game", 250, 340);
-            g2d.drawString("Options", 250, 460);
-            
+
             this.repaint();
             this.revalidate();
             
@@ -122,11 +107,59 @@ public class MainMenu extends JComponent implements MouseListener, MouseMotionLi
     public void mouseClicked(MouseEvent e) 
     {
         Point p = e.getPoint();
-        
-        if(recNew.contains(p))
+        if(recMenu.contains(p))
         {
-            ShapeBlaster.setDisplay("instructions");
+            ShapeBlaster.setDisplay("mainMenu");
         }
+        else if(recL1.contains(p))
+        {
+            ShapeBlaster.setDisplay("game1");
+        }
+        else if(recL2.contains(p))
+        {
+            ShapeBlaster.setDisplay("game2");
+        }
+        else if(recL3.contains(p))
+        {
+            ShapeBlaster.setDisplay("game3");
+        }
+        else if(recL4.contains(p))
+        {
+            ShapeBlaster.setDisplay("game4");
+        }
+        else if(recL5.contains(p))
+        {
+            ShapeBlaster.setDisplay("game5");
+        }
+        else if(recL6.contains(p))
+        {
+            ShapeBlaster.setDisplay("game6");
+        }
+        else if(recL7.contains(p))
+        {
+            ShapeBlaster.setDisplay("game7");
+        }
+        else if(recL8.contains(p))
+        {
+            ShapeBlaster.setDisplay("game8");
+        }
+        else if(recL9.contains(p))
+        {
+            ShapeBlaster.setDisplay("game9");
+        }
+        else if(recL10.contains(p))
+        {
+            ShapeBlaster.setDisplay("game10");
+        }
+        else if(recL11.contains(p))
+        {
+            ShapeBlaster.setDisplay("game11");
+        }
+        else if(recL12.contains(p))
+        {
+            ShapeBlaster.setDisplay("game12");
+        }
+        
     }
 
     public void mousePressed(MouseEvent e) 
@@ -153,28 +186,10 @@ public class MainMenu extends JComponent implements MouseListener, MouseMotionLi
     {
         
     }
-    
-    //Adjusts the location of the arrow that appears after the user hovers over
-    // each button.
+
     public void mouseMoved(MouseEvent e) 
     {
-        Point p = e.getPoint();
-        if(recNew.contains(p))
-        {
-            this.p = new Point((int)recNew.getX()-110, (int)recNew.getY()+10);
-        }
-        else if(recLoad.contains(p))
-        {
-            this.p = new Point((int)recLoad.getX()-110, (int)recLoad.getY()+10);
-        }
-        else if(recOption.contains(p))
-        {
-            this.p = new Point((int)recOption.getX()-110, (int)recOption.getY()+10);
-        }
-        else
-        {
-            this.p = null;
-        }
         
     }
+    
 }

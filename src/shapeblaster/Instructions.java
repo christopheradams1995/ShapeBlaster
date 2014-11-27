@@ -32,29 +32,22 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import static shapeblaster.ShapeBlaster.point;
 
-public class MainMenu extends JComponent implements MouseListener, MouseMotionListener
+public class Instructions extends JComponent implements MouseListener, MouseMotionListener
 {
     // used for the button events including the movement of the arrow
-    private static Rectangle recNew= new Rectangle(230,160,316,95)
-            ,recLoad = new Rectangle(230,280,316,95),
-            recOption = new Rectangle(230,400,316,95);
+    private static Rectangle recRight= new Rectangle(665,515,132,74);
+    
     private Point p;
     
-    BufferedImage back;
-    BufferedImage button;
-    BufferedImage title;
-    BufferedImage arrow;        
+    BufferedImage back;        
     
-    MainMenu()
+    Instructions()
     {
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         
         //Load Images
-        back = getImage("images/space1_0.png");
-        button = getImage("images/MainmenuButton.png");
-        title = getImage("images/MainmenuTitle.png");
-        arrow = getImage("images/arrow.png");
+        back = getImage("images/instructions.png");
     }
     
     public void paintComponent(Graphics g) 
@@ -66,28 +59,7 @@ public class MainMenu extends JComponent implements MouseListener, MouseMotionLi
             
             //Draw Images
             g2d.drawImage(back, 0, 0, null);
-            g2d.drawImage(button, 230, 160, null);
-            g2d.drawImage(button, 230, 280, null);
-            g2d.drawImage(button, 230, 400, null);
-            g2d.drawImage(title, 170, 60, null);
-            if(p != null)
-            {
-                g2d.drawImage(arrow, p.x, p.y, null);
-            }
-            
-            //Add Text for buttons
-            Font font = new Font("Serif", Font.PLAIN, 55);
-            g2d.setFont(font);
-            g2d.setColor(Color.white);
-            
-            //anti alias
-            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                          RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            
-            g2d.drawString("New Game", 250, 220);
-            g2d.drawString("Load Game", 250, 340);
-            g2d.drawString("Options", 250, 460);
-            
+
             this.repaint();
             this.revalidate();
             
@@ -122,11 +94,11 @@ public class MainMenu extends JComponent implements MouseListener, MouseMotionLi
     public void mouseClicked(MouseEvent e) 
     {
         Point p = e.getPoint();
-        
-        if(recNew.contains(p))
+        if(recRight.contains(p))
         {
-            ShapeBlaster.setDisplay("instructions");
+            ShapeBlaster.setDisplay("levelSelection");
         }
+        
     }
 
     public void mousePressed(MouseEvent e) 
@@ -153,28 +125,10 @@ public class MainMenu extends JComponent implements MouseListener, MouseMotionLi
     {
         
     }
-    
-    //Adjusts the location of the arrow that appears after the user hovers over
-    // each button.
+
     public void mouseMoved(MouseEvent e) 
     {
-        Point p = e.getPoint();
-        if(recNew.contains(p))
-        {
-            this.p = new Point((int)recNew.getX()-110, (int)recNew.getY()+10);
-        }
-        else if(recLoad.contains(p))
-        {
-            this.p = new Point((int)recLoad.getX()-110, (int)recLoad.getY()+10);
-        }
-        else if(recOption.contains(p))
-        {
-            this.p = new Point((int)recOption.getX()-110, (int)recOption.getY()+10);
-        }
-        else
-        {
-            this.p = null;
-        }
         
     }
+    
 }

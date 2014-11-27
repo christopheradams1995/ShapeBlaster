@@ -9,6 +9,8 @@
 */
 package shapeblaster;
 
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,10 +20,10 @@ import java.util.Random;
 public class Circle extends Shape implements Runnable
 {
 
-    private int x = 0 , y = 0 , w = 25 , h = 25;
+    private int x = 0 , y = 0 , w = 20 , h = 20;
 
     private int ax = 2, ay = 0;
-    private int maxX = 800 , maxY = 600;
+    private int maxX = 800 , maxY = 500;
     private Thread t;
     private int xspeed, yspeed;
     public static Random ran = new Random();
@@ -150,7 +152,7 @@ public class Circle extends Shape implements Runnable
                         x -= 30;
                         y -= 30;
                         rec.setBounds(x, y, w, h);
-                        ShapeBlaster.checkReact(rec, -1);
+                        ShapeBlaster.checkReact(rec);
                         
                     }
                     if(i > 50)
@@ -158,7 +160,7 @@ public class Circle extends Shape implements Runnable
                         w -=2;
                         h -=2;
                         rec.setBounds(x, y, w, h);
-                        ShapeBlaster.checkReact(rec, -1);
+                        ShapeBlaster.checkReact(rec);
 
                     }
                     if((i % 3) == 0 && i > 50)
@@ -190,13 +192,17 @@ public class Circle extends Shape implements Runnable
     {
         if(!explode)
         {
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f));
             g.setColor(Color.blue);
             g.fillOval(x, y, w, h);
         }
         
         //Set the glow outline
         g.setColor(Color.white);
-        g.drawOval(x, y, w+2, h+2);
+        g.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_ROUND));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
+        g.drawOval(x-2, y-2, w+2, h+2);
     }
     
     public void react()

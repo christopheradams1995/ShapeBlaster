@@ -23,6 +23,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +33,6 @@ import javax.swing.GroupLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import static shapeblaster.MainMenu.getImage;
 
 public class ShapeBlaster extends JComponent implements Runnable, MouseListener
 {
@@ -42,35 +42,37 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
     private static List shapes = new ArrayList();
     public static Point point = new Point(0,0);
     private static MainMenu mm = new MainMenu();
-    private static ShapeBlaster sb = new ShapeBlaster();
+    private static ShapeBlaster sb;
+    private static LevelSelection ls = new LevelSelection();
+    private static Instructions in = new Instructions();
     
     //images to load
     BufferedImage back;
     
-    ShapeBlaster()
+    ShapeBlaster(int squares, int circles, int triangles)
     {
         
         t = new Thread(this,"main");
         t.start();
         
-        for(int i=0;i<50;i++)
+        for(int i=0;i<squares;i++)
         {
             shapes.add(new Square());
         }
-        for(int i=0;i<30;i++)
+        for(int i=0;i<circles;i++)
         {
             shapes.add(new Circle());
         }
         
         //Load Images
-        back = getImage("images\\space1_0.png");
+        back = getImage("images/space1_0.png");
         this.addMouseListener(this);
     }
     
     public static void main(String[] args) 
     { 
        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       frame.setSize(800,600);
+       frame.setSize(800,630);
        frame.setLocationRelativeTo(null);
        frame.setVisible(true);
        frame.setContentPane(mm);
@@ -129,13 +131,68 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
      */
     public static void setDisplay(String con)
     {
-        if(con.equals("game"))
+        if(con.equals("game1"))
         {
+            sb = new ShapeBlaster(0,200,0);
             frame.setContentPane(sb);
+        }
+        else if(con.equals("game2"))
+        {
+            sb = new ShapeBlaster(100,0,0);
+            frame.setContentPane(sb);
+        }
+        else if(con.equals("game3"))
+        {
+            sb = new ShapeBlaster(100,100,0);
+            frame.setContentPane(sb);
+        }
+        else if(con.equals("game4"))
+        {
+            
+        }
+        else if(con.equals("game5"))
+        {
+            
+        }
+        else if(con.equals("game6"))
+        {
+            
+        }
+        else if(con.equals("game7"))
+        {
+            
+        }
+        else if(con.equals("game8"))
+        {
+            
+        }
+        else if(con.equals("game9"))
+        {
+            
+        }
+        else if(con.equals("game10"))
+        {
+            
+        }
+        else if(con.equals("game11"))
+        {
+            
+        }
+        else if(con.equals("game12"))
+        {
+            
         }
         else if(con.equals("mainMenu"))
         {
             frame.setContentPane(mm);
+        }
+        else if(con.equals("levelSelection"))
+        {
+            frame.setContentPane(ls);
+        }
+        else if(con.equals("instructions"))
+        {
+            frame.setContentPane(in);
         }
         
     }
@@ -144,10 +201,9 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
     // rectangle that's given
     // hitCount: How many hits do you want to give the shape?
     //returns true if something is hit
-    public static Boolean checkReact(Rectangle rec, int hitCount)
+    public static Boolean checkReact(Rectangle rec)
     {
         Iterator i = shapes.iterator();
-        int x = 0;
         while(i.hasNext())
         {
             Shape cshape = (Shape) i.next();
@@ -155,9 +211,7 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
             if(cshape.rec.intersects(rec) && !cshape.explode)
             {
                 cshape.react();
-                x++;
                 System.out.println("REACT!@");
-                if(x == hitCount)
                 return true;
             }
         }
@@ -213,17 +267,19 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
      * @param url : the location of the file
      * @return BufferedImage of the file from the location
      */
-    public static BufferedImage getImage(String url)
+    public BufferedImage getImage(String s)
     {
         try
         {
-            File img = new File(url);
-            BufferedImage in = ImageIO.read(img);
+            //uses the classLoader to get the path where the classes are
+            URL url = MainMenu.class.getResource(s);
+            
+            BufferedImage in = ImageIO.read(url);
             return in;
         }
         catch(Exception er)
         {
-            System.out.println("Could not find the image");
+            er.printStackTrace();
             return null;
         }
         
