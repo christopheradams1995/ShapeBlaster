@@ -122,7 +122,7 @@ public class Square extends Shape implements Runnable
                 {
                     x += ax;
                     y += ay;
-                    rec.setBounds(x, y, w, h);
+                    rec.setBounds(x-5, y-5, w+10, h+10);
                 
                     if(x >= maxX-w)
                     {
@@ -243,7 +243,6 @@ public class Square extends Shape implements Runnable
             g.setColor(Color.white);
             g.fillRect(x, y, w, h);
         }
-        
         //Set the glow outline
         g.setColor(Color.white);
         g.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND,

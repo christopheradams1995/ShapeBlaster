@@ -32,24 +32,25 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import static shapeblaster.ShapeBlaster.point;
 
-public class Instructions extends JComponent implements MouseListener, MouseMotionListener
+public class Score extends JComponent implements MouseListener, MouseMotionListener
 {
     // used for the button events including the movement of the arrow
     private static Rectangle recRight= new Rectangle(665,515,132,74);
     
     private Point p;
     
-    BufferedImage back;     
-
+    BufferedImage back;    
+    BufferedImage arrow;  
+    public int shapesLeft;
     
-    Instructions()
+    Score(int shapesLeft)
     {
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
-        
+        this.shapesLeft = shapesLeft;
         //Load Images
-        back = getImage("images/instructions.png");
-
+        back = getImage("images/space1_0.png");
+        arrow = getImage("images/arrow.png");
     }
     
     public void paintComponent(Graphics g) 
@@ -61,9 +62,19 @@ public class Instructions extends JComponent implements MouseListener, MouseMoti
             
             //Draw Images
             g2d.drawImage(back, 0, 0, null);
-            g2d.drawImage(back, 0, 0, null);
-
-
+            g2d.drawImage(arrow, 665, 515, null);
+            
+            //Add Text for buttons
+            Font font = new Font("Serif", Font.PLAIN, 55);
+            g2d.setFont(font);
+            g2d.setColor(Color.white);
+            
+            //anti alias
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                          RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            String s = "Shapes Left: " + shapesLeft;
+            g2d.drawString(s, 100, 80);
+            
             this.repaint();
             this.revalidate();
             

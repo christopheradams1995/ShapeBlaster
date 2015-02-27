@@ -39,31 +39,38 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
     public static JFrame frame = new JFrame("Shape Blaster!");
     private Thread t;
 
-    private static List shapes = new ArrayList();
+    private static List shapes;
     public static Point point = new Point(0,0);
     private static MainMenu mm = new MainMenu();
-    private static ShapeBlaster sb;
     private static LevelSelection ls = new LevelSelection();
     private static Instructions in = new Instructions();
+    private static Score score;
+    private int clicks = 1;
+    static int j = 0;
+    boolean gameOver = false;
+    static int shapesLeft = 0;
     
     //images to load
     BufferedImage back;
     
     ShapeBlaster(int squares, int circles, int triangles)
     {
-        
-        t = new Thread(this,"main");
-        t.start();
+        shapes = new ArrayList();
+        shapesLeft = 0;
         
         for(int i=0;i<squares;i++)
         {
             shapes.add(new Square());
+            shapesLeft++;
         }
         for(int i=0;i<circles;i++)
         {
             shapes.add(new Circle());
+            shapesLeft++;
         }
         
+        t = new Thread(this,"main");
+        t.start();
         //Load Images
         back = getImage("images/space1_0.png");
         this.addMouseListener(this);
@@ -72,7 +79,7 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
     public static void main(String[] args) 
     { 
        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-       frame.setSize(800,630);
+       frame.setSize(810,630);
        frame.setLocationRelativeTo(null);
        frame.setVisible(true);
        frame.setContentPane(mm);
@@ -83,18 +90,40 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
     
     public void run()
     {
-
-        while(true)
+        while(!gameOver)
         {
             try
             {
-
-                Thread.sleep(5);
+                if(clicks <= 0)
+                j++;
+                System.out.println(j);
+                if(clicks <= 0 && j > 60 && !gameOver)
+                {
+                    ShapeBlaster.setDisplay("score");
+                    deleteShapes();
+                    j = 0;
+                    gameOver = true;
+                    System.out.println("GAME OVER");
+                    
+                }
+                Thread.sleep(50);
             }
             catch(Exception er)
             {
             
             }
+        }
+    }
+    
+    public static void deleteShapes()
+    {
+        //Draw/update each shape
+        Iterator i = shapes.iterator();
+        while(i.hasNext())
+        {
+            
+            Shape cshape = (Shape) i.next();
+            i.remove();
         }
     }
     
@@ -133,17 +162,19 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
     {
         if(con.equals("game1"))
         {
-            sb = new ShapeBlaster(0,200,0);
+            ShapeBlaster sb = new ShapeBlaster(0,200,0);
             frame.setContentPane(sb);
+            
         }
         else if(con.equals("game2"))
         {
-            sb = new ShapeBlaster(100,0,0);
+            ShapeBlaster sb = new ShapeBlaster(100,0,0);
             frame.setContentPane(sb);
         }
         else if(con.equals("game3"))
         {
-            sb = new ShapeBlaster(100,100,0);
+            
+            ShapeBlaster sb = new ShapeBlaster(100,100,0);
             frame.setContentPane(sb);
         }
         else if(con.equals("game4"))
@@ -194,6 +225,12 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
         {
             frame.setContentPane(in);
         }
+        else if(con.equals("score"))
+        {
+            Score score = new Score(shapesLeft);
+            frame.setContentPane(score);
+            frame.invalidate();
+        }
         
     }
 
@@ -212,9 +249,12 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
             {
                 cshape.react();
                 System.out.println("REACT!@");
+                shapesLeft--;
+                j = 0;
                 return true;
             }
         }
+        j = 0;
         return false;
     }
 
@@ -237,13 +277,15 @@ public class ShapeBlaster extends JComponent implements Runnable, MouseListener
             if(cshape.rec.contains(point))
             {
                 cshape.react();
-                
+                shapesLeft--;
+                clicks--;
                 point = null;
                 break;
             }
             cshape.checkDelete = false;
         }
         point = null;
+        
     }
 
     public void mouseReleased(MouseEvent e) 

@@ -72,7 +72,17 @@ public class LevelSelection extends JComponent implements MouseListener, MouseMo
             
             //Draw Images
             g2d.drawImage(back, 0, 0, null);
-
+            //Add Text for buttons
+            Font font = new Font("Serif", Font.PLAIN, 40);
+            g2d.setFont(font);
+            g2d.setColor(Color.white);
+            
+            //anti alias
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                          RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            g2d.drawString("ONE", recL1.x, recL1.y+50);
+            g2d.drawString("TWO", recL2.x, recL2.y+50);
+            g2d.drawString("THREE", recL3.x, recL3.y+50);
             this.repaint();
             this.revalidate();
             

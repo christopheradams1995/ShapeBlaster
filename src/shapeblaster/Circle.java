@@ -23,7 +23,7 @@ public class Circle extends Shape implements Runnable
     private int x = 0 , y = 0 , w = 20 , h = 20;
 
     private int ax = 2, ay = 0;
-    private int maxX = 800 , maxY = 500;
+    private int maxX = 800 , maxY = 550;
     private Thread t;
     private int xspeed, yspeed;
     public static Random ran = new Random();
@@ -43,6 +43,8 @@ public class Circle extends Shape implements Runnable
         
         t = new Thread(this);
         t.start();
+        //apeBlaster.sb);
+        
     }
     
 
@@ -115,7 +117,7 @@ public class Circle extends Shape implements Runnable
                 {
                     x += ax;
                     y += ay;
-                    rec.setBounds(x, y, w, h);
+                    rec.setBounds(x-4, y-4, w+6, h+6);
                 
                     if(x >= maxX-w)
                     {
@@ -152,24 +154,35 @@ public class Circle extends Shape implements Runnable
                         x -= 30;
                         y -= 30;
                         rec.setBounds(x, y, w, h);
-                        ShapeBlaster.checkReact(rec);
+                        Boolean hit = true;
+                        do
+                        {
+                             rec.setBounds(x, y, w, h);
+                             hit = ShapeBlaster.checkReact(rec); 
+                        }
+                        while(hit == true);
+                        {
+                            
+                        }
+                      
                         
                     }
                     if(i > 50)
                     {
-                        w -=2;
-                        h -=2;
-                        rec.setBounds(x, y, w, h);
-                        ShapeBlaster.checkReact(rec);
+                        w -=4;
+                        h -=4;
+                        //rec.setBounds(x, y, w, h);
+                        //ShapeBlaster.checkReact(rec);
 
                     }
                     if((i % 3) == 0 && i > 50)
                     {
-                        x += 3;
-                        y += 3;
+                        x += 6;
+                        y += 6;
                     }
-                    if(i == 80)
+                    if(w < 20 && h < 20)
                     {
+                        
                         delete = true;
                         
                     }
